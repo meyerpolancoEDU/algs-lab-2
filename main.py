@@ -17,8 +17,10 @@ def simple_work_calc(n, a, b):
 
 	Returns: the value of W(n).
 	"""
-	# TODO
-	pass
+	if n == 1:
+		return 1
+	else:
+		return a * simple_work_calc(n // b, a, b) + n
 
 def work_calc(n, a, b, f):
 	"""Compute the value of the recurrence $W(n) = aW(n/b) + f(n)
@@ -32,8 +34,10 @@ def work_calc(n, a, b, f):
 
 	Returns: the value of W(n).
 	"""
-	# TODO
-	pass
+	if n == 1:
+		return 1
+	else:
+		return a * work_calc(n // b, a, b, f) + f(n)
 
 def span_calc(n, a, b, f):
 	"""Compute the span associated with the recurrence $W(n) = aW(n/b) + f(n)
@@ -45,10 +49,14 @@ def span_calc(n, a, b, f):
 	f......a function that takes an integer and returns 
            the work done at each node 
 
-	Returns: the value of W(n).
+	Returns: the span of the computation.
 	"""
-	# TODO
-	pass
+	if n == 1:
+		return 1
+	else:
+		# For span, we take the maximum span of the recursive calls
+		# plus the work done at this level (since we can parallelize the recursive calls)
+		return span_calc(n // b, a, b, f) + f(n)
 
 
 
@@ -83,21 +91,21 @@ def print_results(results):
 
 def compare_span(span_fn1, span_fn2, sizes=[10, 20, 50, 100, 1000, 5000, 10000]):
 	"""
-	Compare the values of different recurrences for 
+	Compare the values of different span recurrences for 
 	given input sizes.
 
 	Returns:
 	A list of tuples of the form
-	(n, work_fn1(n), work_fn2(n), ...)
+	(n, span_fn1(n), span_fn2(n), ...)
 	
 	"""
 	result = []
 	for n in sizes:
-		# compute W(n) using current a, b, f
+		# compute span for n using span functions
 		result.append((
 			n,
-			span_fn1,
-			span_fn2
+			span_fn1(n),
+			span_fn2(n)
 			))
 	return result
 	
